@@ -1,0 +1,14 @@
+paths:
+    tests: tests
+    log: tests/_output
+    data: tests/_data
+    support: tests/_support
+    envs: tests/_envs
+    output: tests/_output
+extensions:
+    enabled:
+        - Codeception\Extension\DI
+    config:
+        Codeception\Extension\DI:
+            services:
+                di: 'tests/Feature/ExampleTest.php'

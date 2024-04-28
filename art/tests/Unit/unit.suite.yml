@@ -1,0 +1,6 @@
+# This is a sample configuration for a unit test suite.
+actor: UnitTester
+modules:
+    enabled:
+        - Asserts
+        - \Helper\Unit

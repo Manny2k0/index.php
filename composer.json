@@ -1,0 +1,49 @@
+{
+    "name": "jetbrains/phpstorm-workshop",
+    "description": "Materials for the PhpStorm workshop. Check https://github.com/jetbrains/phpstorm-workshop/ for more info.",
+    "minimum-stability": "dev",
+    "license": "Apache-2.0",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Maksim Kolmakov",
+            "email": "maxim.kolmakov@jetbrains.com"
+        }
+    ],
+    "require": {
+        "wovosoft/laravel-package-make-commands": "dev-master",
+        "ext-pdo": "*",
+        "php-webdriver/webdriver": "1.15.1",
+        "codeception/verify": "*",
+        "codeception/specify": "*",
+        "codeception/module-phpbrowser": "*",
+        "codeception/module-asserts": "*",
+        "laravel/framework": "11.x-dev",
+        "facebook/webdriver": "1.7.1"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "9.6.11",
+        "laravel/dusk": "8.x-dev",
+        "codeception/module-webdriver": "3.x-dev",
+        "phpunit/phpunit-selenium": "dev-master"
+    },
+
+
+    "autoload": {
+        "psr-4": {
+            "src\\": "src/"
+        }
+    },
+
+
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "Tests/"
+        }
+    },
+    "config": {
+        "allow-plugins": {
+            "kylekatarnls/update-helper": true
+        }
+    }
+}

@@ -1,0 +1,190 @@
+<style>
+    /* Global styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f5f5f5;
+}
+
+.btn-black-white {
+    background-color: #000;
+    color: #fff;
+}
+
+.btn-black-white:hover {
+    background-color: #333;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.header {
+    background-color: #f2f2f2;
+    padding: 10px 0;
+    border-bottom: 1px solid #ccc;
+    text-align: center;
+}
+
+.header h3 {
+    margin-top: 0;
+    margin-bottom: 0;
+    font-size: 24px;
+    color: #333;
+}
+
+nav {
+    background-color: darkgray;
+    overflow: hidden;
+}
+
+nav ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    float: left;
+}
+
+nav ul li a {
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 14px 16px;
+    text-decoration: none;
+}
+
+nav ul li a:hover {
+    background-color: blue;
+}
+
+/* Space out content a bit */
+.container {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 20px;
+}
+
+.mainarea {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 18px;
+    color: #fff;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.btn:hover {
+    background-color: #066aa0;
+}
+
+.footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-top: 1px solid #ddd;
+}
+
+.marketing p {
+    font-size: 16px;
+    line-height: 1.6;
+    color: #333;
+}
+
+.marketing h4 {
+    margin-top: 20px;
+    font-size: 20px;
+    color: #333;
+}
+
+/* Button */
+form button.btn-black-white,
+nav ul li a.btn-black-white {
+    padding: 10px 20px;
+    background-color: red;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Button hover effect */
+form button.btn-black-white:hover,
+nav ul li a.btn-black-white:hover {
+    background-color: #333; /* darker shade of gray */
+    color: #fff; /* white text */
+}
+
+/* Styling for registration link */
+.registration-link {
+    text-align: center;
+    margin-top: 20px;
+    color: #333;
+}
+
+.registration-link a {
+    color: #000;
+    text-decoration: none;
+}
+
+.registration-link a:hover {
+    color: #333;
+}
+
+/* Styling for list items */
+.mainarea ul {
+    list-style: none;
+    padding: 0;
+}
+
+.mainarea ul li {
+    margin-bottom: 10px;
+    padding-left: 20px;
+    position: relative;
+}
+
+.mainarea ul li:before {
+    content: "\2022";
+    position: absolute;
+    left: 0;
+    color: #088BD3;
+}
+
+.registration-link a {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: green; /* black background */
+    color: #fff; /* white text */
+    text-decoration: none;
+    border-radius: 5px; /* rounded corners */
+    transition: background-color 0.3s; /* transition for background color */
+}
+
+.registration-link a:hover {
+    background-color: black;
+    color: white/* slightly darker shade on hover */
+}
+
+/* Responsive styles */
+@media screen and (max-width: 600px) {
+    nav ul li {
+        float: none;
+        display: block;
+    }
+}
+</style>

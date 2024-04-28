@@ -1,0 +1,39 @@
+{
+    "name": "wovosoft/laravel-package-make-commands",
+    "description": "Laravel make:* commands for Packages in ./packages/vendor/package for local development",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Narayan Adhikary",
+            "email": "wovosoft@gmail.com",
+            "homepage": "https://wovosoft.com"
+        }
+    ],
+    "homepage": "https://github.com/wovosoft/laravel-package-make-commands",
+    "keywords": [
+        "Laravel",
+        "Laravel",
+        "Package",
+        "Make Commands"
+    ],
+    "autoload": {
+        "psr-4": {
+            "Wovosoft\\LaravelPackageMakeCommands\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Wovosoft\\LaravelPackageMakeCommands\\Tests\\": "tests"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Wovosoft\\LaravelPackageMakeCommands\\LaravelPackageMakeCommandsServiceProvider"
+            ],
+            "aliases": {
+                "LaravelPackageMakeCommands": "Wovosoft\\LaravelPackageMakeCommands\\Facades\\LaravelPackageMakeCommands"
+            }
+        }
+    }
+}
