@@ -4,22 +4,29 @@ namespace src;
 
 use PDO;
 
+/**
+ * Class Register
+ *
+ * This class is responsible for registering users.
+ */
 class Register
 {
-    private $pdo; // Database connection
+    // Database connection
+    private $pdo;
 
-    public function __construct() // Constructor
+    // Constructor
+    public function __construct()
     {
         // Establish a database connection
         $this->pdo = new PDO('mysql:host=localhost;dbname=Register', 'root', 'Eo606752k18!');
     }
 
-    public function validateUsername($username): bool // Validate username
+    // Validate username
+    public function validateUsername($username): bool
     {
         // Check if username is at least 5 characters long
         return strlen($username) >= 5;
     }
-
 
     public function validatePassword($password)
     {

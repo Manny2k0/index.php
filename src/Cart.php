@@ -4,13 +4,14 @@ namespace src;
 
 class Cart
 {
-    private $items = [];
-    private $lastAction = null;
+    private $items = []; // Consistency
+    private $lastAction = null; // Consistency
 
-    public function addItem($id, $product, $quantity = 1): string
+
+    public function addItem($id, $product, $quantity = 1): string // Consistency
     {
-        if (isset($this->items[$id])) {
-            $this->items[$id]['quantity'] += $quantity;
+        if (isset($this->items[$id])) { // Consistency
+            $this->items[$id]['quantity'] += $quantity; // Consistency
             $this->lastAction = ['action' => 'addItem', 'id' => $id, 'product' => $product, 'quantity' => $quantity];
             return "Item quantity updated successfully."; // Feedback
         } else {
@@ -22,6 +23,7 @@ class Cart
 
     public function removeItem($id): string
     {
+
         if (isset($this->items[$id])) {
             $removedItem = $this->items[$id];
             unset($this->items[$id]);
@@ -49,7 +51,7 @@ class Cart
             switch ($this->lastAction['action']) {
                 case 'addItem':
                     $this->items[$this->lastAction['id']]['quantity'] -= $this->lastAction['quantity'];
-                    if ($this->items[$this->lastAction['id']]['quantity'] <= 0) {
+                    if ($this->items[$this->lastAction['id']]['quantity'] <= 0) { //
                         unset($this->items[$this->lastAction['id']]);
                     }
                     return "Last action undone. Item removed from cart.";

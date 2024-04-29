@@ -1,7 +1,7 @@
 <?php
 
 
-require_once '../src/functions.php'; // Include the functions.php file
+require_once 'functions.php'; // Include the functions.php file
 
 $action = filter_input(INPUT_GET, 'action'); // Get the action from the URL
 

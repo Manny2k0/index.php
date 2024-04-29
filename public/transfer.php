@@ -1,106 +1,111 @@
 <?php
-session_start();
-require_once('config.php');
+session_start(); // Start or resume the session
+require_once('../config/config.php'); // Include the database configuration file
 
-if (!isset($_SESSION['Username'])) {
-    header("Location: login.php");
-    exit();
+if (!isset($_SESSION['Username'])) { // Check if the user is logged in
+    header("Location: login.php"); // Redirect to the login page
+    exit(); // Exit the script
 }
 
+// Initialize variables
 try {
-    $pdo = new PDO('mysql:host=localhost;dbname=Register', 'root', 'Eo606752k18!');
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+    $pdo = new PDO('mysql:host=localhost;dbname=Register', 'root', 'Eo606752k18!'); // Create a new PDO instance
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set the error mode attribute to exception
 
-    $username = $_SESSION['Username'];
-    $stmt = $pdo->prepare("SELECT id, balance FROM users WHERE username = :username");
-    $stmt->bindParam(':username', $username);
-    $stmt->execute();
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    $username = $_SESSION['Username']; // Get the username from the session
+    $stmt = $pdo->prepare("SELECT id, balance FROM users WHERE username = :username"); // Prepare an SQL statement
+    $stmt->bindParam(':username', $username); // Bind the parameter
+    $stmt->execute(); // Execute the SQL statement
+    $user = $stmt->fetch(PDO::FETCH_ASSOC); // Fetch the result as an associative array
 
-    if (!$user) {
-        throw new Exception("User not found");
+
+    if (!$user) { // Check if the user is not found
+        throw new Exception("User not found"); // Throw an exception
     }
 
-    $user_id = $user['id'];
-    $_SESSION['user_id'] = $user_id;
-    $_SESSION['balance'] = $user['balance'];
+    $user_id = $user['id']; // Get the user ID from the result
+    $_SESSION['user_id'] = $user_id; // Set the session variable 'user_id' to the user ID
+    $_SESSION['balance'] = $user['balance']; // Set the session variable 'balance' to the user's balance
 
-    $stmt = $pdo->prepare("SELECT * FROM transaction_history WHERE user_id = :user_id ORDER BY transaction_date DESC");
-    $stmt->bindParam(':user_id', $user_id);
-    $stmt->execute();
-    $transactions = $stmt->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    echo "Error: " . $e->getMessage();
-} catch (Exception $e) {
-    echo "Error: " . $e->getMessage();
+    $stmt = $pdo->prepare("SELECT * FROM transaction_history WHERE user_id = :user_id ORDER BY transaction_date DESC"); // Prepare an SQL statement
+    $stmt->bindParam(':user_id', $user_id); // Bind the parameter
+    $stmt->execute(); // Execute the SQL statement
+    $transactions = $stmt->fetchAll(PDO::FETCH_ASSOC); // Fetch all the results as an associative array
+} catch (PDOException $e) { // Catch any PDO exceptions
+    echo "Error: " . $e->getMessage(); // Display the error message
+} catch (Exception $e) { // Catch any other exceptions
+    echo "Error: " . $e->getMessage(); // Display the error message
 }
 
-$errors = [];
+$errors = []; // Initialize an empty array to store error messages
 
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (isset($_POST['Amount']) && isset($_POST['Recipient']) && isset($_POST['Purpose'])) {
-        $transfer_amount = $_POST['Amount'] * 100;
-        $recipient_username = $_POST['Recipient'];
-        $purpose_of_transfer = $_POST['Purpose'];
+// Process the transfer
+if ($_SERVER["REQUEST_METHOD"] == "POST") { // Check if the form is submitted
+    if (isset($_POST['Amount']) && isset($_POST['Recipient']) && isset($_POST['Purpose'])) {  // Check if the form fields are set
+        $transfer_amount = $_POST['Amount'] * 100; // Convert the amount to cents
+        $recipient_username = $_POST['Recipient']; // Get the recipient username
+        $purpose_of_transfer = $_POST['Purpose']; // Get the purpose of the transfer
 
-        if($_SESSION['balance'] < $transfer_amount) {
-            $errors[] = "Insufficient balance";
-        } else {
-            $stmt = $pdo->prepare("SELECT id FROM users WHERE username = :username");
-            $stmt->bindParam(':username', $recipient_username);
-            $stmt->execute();
-            $recipient = $stmt->fetch(PDO::FETCH_ASSOC);
+        if($_SESSION['balance'] < $transfer_amount) { // Check if the user has sufficient balance
+            $errors[] = "Insufficient balance"; // Add an error message
+        } else { // If the user has sufficient balance
+            $stmt = $pdo->prepare("SELECT id FROM users WHERE username = :username"); // Prepare an SQL statement
+            $stmt->bindParam(':username', $recipient_username); // Bind the parameter
+            $stmt->execute(); // Execute the SQL statement
+            $recipient = $stmt->fetch(PDO::FETCH_ASSOC); // Fetch the result as an associative array
 
-            if (!$recipient) {
-                $errors[] = "Recipient not found";
-            } else {
-                $recipient_id = $recipient['id'];
+            if (!$recipient) { // Check if the recipient is not found
+                $errors[] = "Recipient not found"; // Add an error message
+            } else { // If the recipient is found
+                $recipient_id = $recipient['id']; // Get the recipient ID
 
-                try {
-                    $pdo->beginTransaction();
+                try { // Try to process the transfer
+                    $pdo->beginTransaction(); // Begin a transaction
 
                     // Insert transaction for sender
                     $stmt_sender = $pdo->prepare("INSERT INTO transaction_history (user_id, recipient_id, transaction_date, transaction_type, amount, purpose_of_transfer) VALUES (:user_id, :recipient_id, CURRENT_TIMESTAMP, 'transfer', :transfer_amount, :purpose_of_transfer)");
-                    $stmt_sender->bindParam(':user_id', $user_id);
-                    $stmt_sender->bindParam(':recipient_id', $recipient_id);
-                    $stmt_sender->bindParam(':transfer_amount', $transfer_amount);
-                    $stmt_sender->bindParam(':purpose_of_transfer', $purpose_of_transfer);
+                    $stmt_sender->bindParam(':user_id', $user_id); // Bind the parameter
+                    $stmt_sender->bindParam(':recipient_id', $recipient_id); // Bind the parameter
+                    $stmt_sender->bindParam(':transfer_amount', $transfer_amount); // Bind the parameter
+                    $stmt_sender->bindParam(':purpose_of_transfer', $purpose_of_transfer); // Bind the parameter
                     $stmt_sender->execute();
 
                     // Insert transaction for recipient
                     $stmt_recipient = $pdo->prepare("INSERT INTO transaction_history (user_id, recipient_id, transaction_date, transaction_type, amount, purpose_of_transfer) VALUES (:recipient_id, :user_id, CURRENT_TIMESTAMP, 'transfer', :transfer_amount, :purpose_of_transfer)");
-                    $stmt_recipient->bindParam(':recipient_id', $recipient_id);
-                    $stmt_recipient->bindParam(':user_id', $user_id);
-                    $stmt_recipient->bindParam(':transfer_amount', $transfer_amount);
-                    $stmt_recipient->bindParam(':purpose_of_transfer', $purpose_of_transfer);
-                    $stmt_recipient->execute();
+                    $stmt_recipient->bindParam(':recipient_id', $recipient_id); // Bind the parameter
+                    $stmt_recipient->bindParam(':user_id', $user_id); // Bind the parameter
+                    $stmt_recipient->bindParam(':transfer_amount', $transfer_amount); // Bind the parameter
+                    $stmt_recipient->bindParam(':purpose_of_transfer', $purpose_of_transfer); // Bind the parameter
+                    $stmt_recipient->execute(); // Execute the SQL statement
 
-                    $stmt_balance_sender = $pdo->prepare("SELECT balance FROM users WHERE id = :user_id");
-                    $stmt_balance_sender->bindParam(':user_id', $user_id);
-                    $stmt_balance_sender->execute();
-                    $current_balance_sender = $stmt_balance_sender->fetchColumn();
-                    $new_balance_sender = $current_balance_sender - $transfer_amount;
-                    $stmt_update_balance_sender = $pdo->prepare("UPDATE users SET balance = :new_balance WHERE id = :user_id");
-                    $stmt_update_balance_sender->bindParam(':new_balance', $new_balance_sender);
-                    $stmt_update_balance_sender->bindParam(':user_id', $user_id);
-                    $stmt_update_balance_sender->execute();
+                    // Update sender balance
+                    $stmt_balance_sender = $pdo->prepare("SELECT balance FROM users WHERE id = :user_id"); // Prepare an SQL statement
+                    $stmt_balance_sender->bindParam(':user_id', $user_id); // Bind the parameter
+                    $stmt_balance_sender->execute(); // Execute the SQL statement
+                    $current_balance_sender = $stmt_balance_sender->fetchColumn(); // Fetch the result as a column
+                    $new_balance_sender = $current_balance_sender - $transfer_amount; // Calculate the new balance
+                    $stmt_update_balance_sender = $pdo->prepare("UPDATE users SET balance = :new_balance WHERE id = :user_id"); // Prepare an SQL statement
+                    $stmt_update_balance_sender->bindParam(':new_balance', $new_balance_sender); // Bind the parameter
+                    $stmt_update_balance_sender->bindParam(':user_id', $user_id); // Bind the parameter
+                    $stmt_update_balance_sender->execute(); // Execute the SQL statement
 
+                    // Update recipient balance
                     $stmt_balance_recipient = $pdo->prepare("SELECT balance FROM users WHERE id = :recipient_id");
                     $stmt_balance_recipient->bindParam(':recipient_id', $recipient_id);
                     $stmt_balance_recipient->execute();
-                    $current_balance_recipient = $stmt_balance_recipient->fetchColumn();
+                    $current_balance_recipient = $stmt_balance_recipient->fetchColumn(); // Fetch the result as a column
                     $new_balance_recipient = $current_balance_recipient + $transfer_amount;
                     $stmt_update_balance_recipient = $pdo->prepare("UPDATE users SET balance = :new_balance WHERE id = :recipient_id");
                     $stmt_update_balance_recipient->bindParam(':new_balance', $new_balance_recipient);
                     $stmt_update_balance_recipient->bindParam(':recipient_id', $recipient_id);
                     $stmt_update_balance_recipient->execute();
 
-                    $pdo->commit();
+                    $pdo->commit(); // Commit the transaction
 
-                    $_SESSION['balance'] = $new_balance_sender;
-                } catch (PDOException $e) {
-                    $pdo->rollback();
-                    $errors[] = "Error processing transfer: " . $e->getMessage();
+                    $_SESSION['balance'] = $new_balance_sender; // Update the session variable 'balance'
+                } catch (PDOException $e) { // Catch any PDO exceptions
+                    $pdo->rollback(); // Rollback the transaction
+                    $errors[] = "Error processing transfer: " . $e->getMessage(); // Add an error message
                 }
             }
         }
@@ -108,7 +113,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 // Display current balance
-$currentBalance = isset($_SESSION['balance']) ? $_SESSION['balance'] : 0.00;
+$currentBalance = isset($_SESSION['balance']) ? $_SESSION['balance'] : 0.00; // Get current balance from session
 
 ?>
 <!DOCTYPE html>
@@ -304,22 +309,22 @@ $currentBalance = isset($_SESSION['balance']) ? $_SESSION['balance'] : 0.00;
                 <li><a href="index.php">Home</a></li>
                 <li><a href="topup.php">Top Up</a></li>
                 <li><a href="transaction.php">History</a></li>
-                <li><a href="../src/functions.php">Card</a></li>
-                <li><a href="../template/cart.php">Cart</a></li>
+                <li><a href="functions.php">Card</a></li>
+                <li><a href="cart.php">Cart</a></li>
             </ul>
         </nav>
     </div>
 
     <div class="mainarea">
         <h1>Transfer</h1>
-        <h3>Current Balance: <?php echo isset($_SESSION['balance']) ? "$" . number_format($_SESSION['balance'] / 100, 2) : '0.00'; ?></h3>
+        <h3>Current Balance: <?php echo isset($_SESSION['balance']) ? "$" . number_format($_SESSION['balance'] / 100, 2) : '0.00'; ?></h3> <!-- Display current balance -->
 
-        <?php if (!empty($errors)) : ?>
+        <?php if (!empty($errors)) : ?> <!-- Display error messages if there are any -->
             <div class="alert">
                 <ul>
-                    <?php foreach ($errors as $error) : ?>
-                        <li><?php echo $error; ?></li>
-                    <?php endforeach; ?>
+                    <?php foreach ($errors as $error) : ?> <!-- Display error messages if there are any -->
+                        <li><?php echo $error; ?></li> <!-- Display error messages if there are any -->
+                    <?php endforeach; ?> <!-- Display error messages if there are any -->
                 </ul>
             </div>
         <?php endif; ?>

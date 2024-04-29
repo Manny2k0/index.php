@@ -1,38 +1,44 @@
 <?php
-session_start();
+session_start(); // Start the session
 
 // Check if 'cart' is set in session, if not initialize it as an empty array
-if (!isset($_SESSION['cart'])) {
-    $_SESSION['cart'] = [];
+if (!isset($_SESSION['cart'])) { // Check if cart is not set
+    $_SESSION['cart'] = []; // Initialize cart
 }
 
-$cart = $_SESSION['cart'];
+// Check if 'cart' is set in session, if not initialize it as an empty array
+$cart = $_SESSION['cart']; // Assign cart to a variable
 
-function calculateTotal() {
-    $total = 0;
-    foreach ($_SESSION['cart'] as $item) {
-        if (is_array($item) && isset($item['product']) && is_array($item['product']) && isset($item['quantity'])) {
-            $total += $item['product']['price'] * $item['quantity'];
+// Calculate total
+function calculateTotal() { // Function to calculate total
+    $total = 0; // Initialize total
+    foreach ($_SESSION['cart'] as $item) { // Loop through cart items
+        if (is_array($item) && isset($item['product']) && is_array($item['product']) && isset($item['quantity'])) { // Check if item is an array and has product and quantity
+            $total += $item['product']['price'] * $item['quantity']; // Calculate total
         }
     }
-    return number_format($total, 2);
+    // return $total; // Return total
+    return number_format($total, 2); // Return formatted total
 }
 
-if (isset($_GET['action']) && $_GET['action'] === 'removeFromCart' && isset($_GET['id'])) {
-    $id = $_GET['id'];
-    if (isset($cart[$id])) {
-        unset($cart[$id]);
-        $_SESSION['cart'] = $cart;
+// Remove from cart
+if (isset($_GET['action']) && $_GET['action'] === 'removeFromCart' && isset($_GET['id'])) { // Check if action is removeFromCart and id is set
+    $id = $_GET['id']; // Assign id to a variable
+    if (isset($cart[$id])) { // Check if item is in the cart
+        unset($cart[$id]); // Remove item from the cart
+        $_SESSION['cart'] = $cart; // Update cart in session
     }
 }
 
-if (isset($_POST['updateQuantity'], $_POST['itemId'], $_POST['quantity']) && is_array($_POST['itemId']) && is_array($_POST['quantity'])) {
-    foreach ($_POST['itemId'] as $index => $id) {
-        if (isset($cart[$id]) && isset($_POST['quantity'][$index])) {
-            $cart[$id]['quantity'] = $_POST['quantity'][$index];
+// Update quantity
+if (isset($_POST['updateQuantity'], $_POST['itemId'], $_POST['quantity']) && is_array($_POST['itemId']) && is_array($_POST['quantity'])) { // Check if updateQuantity, itemId, and quantity are set
+    foreach ($_POST['itemId'] as $index => $id) { // Loop through item IDs
+        if (isset($cart[$id]) && isset($_POST['quantity'][$index])) { // Check if item is in the cart and quantity is set
+            $cart[$id]['quantity'] = $_POST['quantity'][$index]; // Update quantity
         }
     }
-    $_SESSION['cart'] = $cart;
+    //
+    $_SESSION['cart'] = $cart; // Update cart in session
 }
 ?>
 <!DOCTYPE html>
@@ -154,7 +160,7 @@ if (isset($_POST['updateQuantity'], $_POST['itemId'], $_POST['quantity']) && is_
     <h1>Shopping Cart</h1>
     <hr>
 
-    <?php if (!empty($_SESSION['cart'])): ?>
+    <?php if (!empty($_SESSION['cart'])): ?> <!-- Check if cart is not empty -->
         <form action="" method="post">
             <div class="table-container">
                 <table class="table">
@@ -168,16 +174,16 @@ if (isset($_POST['updateQuantity'], $_POST['itemId'], $_POST['quantity']) && is_
                     </tr>
                     </thead>
                     <tbody>
-                    <?php foreach ($_SESSION['cart'] as $id => $item): ?>
-                        <?php if (isset($item['product']) && is_array($item['product'])): ?>
+                    <?php foreach ($_SESSION['cart'] as $id => $item): ?> <!-- Loop through cart items -->
+                        <?php if (isset($item['product']) && is_array($item['product'])): ?> <!-- Check if item has product -->
                             <tr>
-                                <td><?= $item['product']['name'] ?></td>
+                                <td><?= $item['product']['name'] ?></td> <!-- Display product name -->
                                 <td>
-                                    <input type="number" name="quantity[]" value="<?= $item['quantity'] ?>" class="quantity-input">
-                                    <input type="hidden" name="itemId[]" value="<?= $id ?>">
+                                    <input type="number" name="quantity[]" value="<?= $item['quantity'] ?>" class="quantity-input"> <!-- Quantity input -->
+                                    <input type="hidden" name="itemId[]" value="<?= $id ?>"> <!-- Hidden input to store item ID -->
                                 </td>
-                                <td>$<?= $item['product']['price'] ?></td>
-                                <td>$<?= number_format($item['product']['price'] * $item['quantity'], 2) ?></td>
+                                <td>$<?= $item['product']['price'] ?></td> <!-- Display product price -->
+                                <td>$<?= number_format($item['product']['price'] * $item['quantity'], 2) ?></td> <!-- Display total price -->
                                 <td>
                                     <a href="cart.php?action=removeFromCart&id=<?= $id ?>" class="btn btn-danger">Remove</a>
                                 </td>
@@ -191,11 +197,11 @@ if (isset($_POST['updateQuantity'], $_POST['itemId'], $_POST['quantity']) && is_
         </form>
         <?php $total = calculateTotal(); ?>
         <p class="total">Total: $<?= $total ?></p>
-        <a href="../public/Contact.php?total=<?= $total ?>" class="btn btn-primary checkout-btn">Checkout</a>
+        <a href="Contact.php?total=<?= $total ?>" class="btn btn-primary checkout-btn">Checkout</a>
     <?php else: ?>
         <p>Your shopping cart is empty.</p>
     <?php endif; ?>
-    <a href="../src/functions.php" class="btn btn-primary float-right">Continue Shopping</a>
+    <a href="functions.php" class="btn btn-primary float-right">Continue Shopping</a>
 </div>
 </body>
 </html>

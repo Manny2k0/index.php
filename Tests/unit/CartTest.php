@@ -14,7 +14,7 @@ class CartTest extends TestCase
         $this->cart = new Cart();
     }
 
-    public function testAddItem()
+    public function testAddItem() // Add this method
     {
         // Simulate user interaction: Add item to cart
         $output = $this->cart->addItem(1, ['name' => 'Product 1', 'price' => 10], 2);

@@ -1,12 +1,12 @@
 <?php
 session_start(); // Start the session
 
-// require_once ('../classes/LoginTest.php'); // Include the User class for user-related operations
-// require_once('../session.php');
+// Include the session handling file
+
 
 // Check if the user is logged in
  if (!isset($_SESSION['Username'])) {
-// if($_SESSION['Active'] == false){
+
     // Redirect to login page if not logged in
     header("Location: login.php"); // Redirect to login page
     exit();
@@ -23,7 +23,7 @@ $currentBalance = isset($_SESSION['balance']) ? $_SESSION['balance'] : 0.00; // 
 <html lang="en">
 <header>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="X-UA-Compatible" conhtent="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home</title>
     <style>
@@ -242,8 +242,8 @@ $currentBalance = isset($_SESSION['balance']) ? $_SESSION['balance'] : 0.00; // 
             <li><a href="topup.php">Top-up</a></li>
             <li><a href="transfer.php">Transfer</a></li>
             <li><a href="transaction.php">History</a></li>
-            <li><a href="../src/functions.php">Cards</a></li>
-            <li><a href="../template/cart.php">Cart</a></li>
+            <li><a href="functions.php">Cards</a></li>
+            <li><a href="cart.php">Cart</a></li>
         </ul>
     </nav>
     <div class="mainarea">

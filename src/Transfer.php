@@ -5,15 +5,35 @@ namespace src;
 use PDO;
 use PDOException;
 
+/**
+ * Class Transfer
+ *
+ * This class is responsible for handling transfer operations.
+ */
 class Transfer
 {
+    // Database connection
     private $pdo;
 
+    /**
+     * Transfer constructor.
+     *
+     * @param $pdo - The PDO instance for database operations
+     */
     public function __construct($pdo)
     {
+        // Establish a database connection
         $this->pdo = new \PDO('mysql:host=localhost;dbname=Register', 'root', 'Eo606752k18!');
     }
 
+    /**
+     * Perform a transfer operation.
+     *
+     * @param $purpose - The purpose of the transfer
+     * @param $recipient - The recipient of the transfer
+     * @param $amount - The amount to transfer
+     * @return bool - Returns true if the transfer is successful, false otherwise
+     */
     public function transfer($purpose, $recipient, $amount)
     {
         // Validate the recipient
@@ -69,6 +89,12 @@ class Transfer
         return true;
     }
 
+    /**
+     * Check the type of a number.
+     *
+     * @param $number - The number to check
+     * @return string - Returns 'positive' if the number is positive, 'negative' if the number is negative, and 'zero' if the number is zero
+     */
     public function checkNumberType($number): string
     {
         if ($number > 0) {
@@ -80,19 +106,30 @@ class Transfer
         }
     }
 
+    /**
+     * Calculate the factorial of a number.
+     *
+     * @param $number - The number to calculate the factorial of
+     * @return string|int - Returns the factorial of the number if it is non-negative, 'undefined' otherwise
+     */
     public function factorial($number): string|int
     {
         if ($number < 0) {
-            return 'undefined';
+            return 'undefined'; //
         }
 
         $factorial = 1;
         for ($i = 1; $i <= $number; $i++) {
-            $factorial *= $i;
+            $factorial *= $i; //
         }
-        return $factorial;
+        return $factorial; //
     }
 
+    /**
+     * Get the PDO instance.
+     *
+     * @return PDO - The PDO instance
+     */
     public function getPdo()
     {
         return $this->pdo;

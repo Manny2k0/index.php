@@ -1,8 +1,14 @@
 <?php
 
-class Session
+namespace Session; // Define the namespace.
+
+use JetBrains\PhpStorm\NoReturn;
+
+// Import the NoReturn class.
+
+class Session // Define the Session class.
 {
-    public function killSession() // Destroy the session
+    public function killSession(): void // Destroy the session
     {
 
         $_SESSION = []; // Overwrite the current session array with an empty array.
@@ -17,7 +23,7 @@ class Session
         session_destroy();
     }
 
-    public function forgetSession() // Destroy the session
+    #[NoReturn] public function forgetSession(): void // Destroy the session
     {
         $this->killSession(); // Call the killSession method to destroy the session.
 

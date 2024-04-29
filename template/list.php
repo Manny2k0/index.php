@@ -215,7 +215,7 @@
                     <li><a href="../public/index.php">Home</a></li>
                     <li><a href="../public/transfer.php">Transfer</a></li>
                     <li><a href="../public/transaction.php">History</a></li>
-                    <li><a href="../template/cart.php">Cart</a></li>
+                    <li><a href="../public/cart.php">Cart</a></li>
                 </ul>
             </nav>
         </div>
@@ -233,11 +233,11 @@
         <img src="<?= $product['image'] ?>" class="card-img-top product-image" alt="<?= $product['name'] ?>">
         <div class="card-body">
             <div>
-                <h5 class="card-title"><?= $product['name'] ?></h5>
-                <p class="card-text"><?= $product['description'] ?></p>
-                <p class="card-text">$<?= $product['price'] ?></p>
+                <h5 class="card-title"><?= $product['name'] ?></h5> <!-- Add the new class to the h5 tag -->
+                <p class="card-text"><?= $product['description'] ?></p> <!-- Add the new class to the p tag -->
+                <p class="card-text">$<?= $product['price'] ?></p> <!-- Add the new class to the p tag -->
             </div>
-            <a href="?action=addToCart&id=<?= $id ?>" class="btn btn-primary">Add to Cart</a>
+            <a href="?action=addToCart&id=<?= $id ?>" class="btn btn-primary">Add to Cart</a> <!-- Add the new class to the button -->
         </div>
     </div>
 <?php endforeach; ?>

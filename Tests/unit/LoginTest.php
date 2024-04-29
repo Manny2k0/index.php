@@ -50,23 +50,23 @@ class LoginTest extends TestCase
     public function testAuthenticateWithoutMock()
     {
         // Partition 1: Valid username and valid password
-        $this->assertTrue($this->login->authenticate('Manny', 'emmanuelokafor45k'));
+        $this->assertTrue($this->login->authenticate('Manny', 'emmanuelokafor45k')); // Test with valid username and password
 
         // Partition 2: Valid username and invalid password
-        $this->assertFalse($this->login->authenticate('Manny', 'invalidPassword'));
+        $this->assertFalse($this->login->authenticate('Manny', 'invalidPassword')); // Test with valid username and invalid password
 
         // Partition 3: Invalid username and any password
-        $this->assertFalse($this->login->authenticate('invalidUser', 'validPassword'));
-        $this->assertFalse($this->login->authenticate('invalidUser', 'invalidPassword'));
+        $this->assertFalse($this->login->authenticate('invalidUser', 'validPassword')); // Test with invalid username and valid password
+        $this->assertFalse($this->login->authenticate('invalidUser', 'invalidPassword')); // Test with invalid username and invalid password
 
         // Basis Path Testing
         // Path 1: The method returns true
-        $this->assertTrue($this->login->authenticate('Manny', 'emmanuelokafor45k'));
+        $this->assertTrue($this->login->authenticate('Manny', 'emmanuelokafor45k')); // Test with valid username and password
 
         // Path 2: The method returns false
-        $this->assertFalse($this->login->authenticate('validUser', 'invalidPass'));
-        $this->assertFalse($this->login->authenticate('invalidUser', 'validPass'));
-        $this->assertFalse($this->login->authenticate('invalidUser', 'invalidPass'));
+        $this->assertFalse($this->login->authenticate('validUser', 'invalidPass')); // Test with valid username and invalid password
+        $this->assertFalse($this->login->authenticate('invalidUser', 'validPass')); // Test with invalid username and valid password
+        $this->assertFalse($this->login->authenticate('invalidUser', 'invalidPass')); // Test with invalid username and invalid password
     }
 }
 

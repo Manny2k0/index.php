@@ -3,7 +3,7 @@
 session_start();
 
 // Include configuration file
-require_once('config.php');
+require_once('../config/config.php');
 // require_once '../classes/User.php';
 // require_once '../classes/Transaction.php';
 
@@ -28,7 +28,7 @@ if (isset($_POST['register'])) { // Check if the form is submitted
             $errors[] = "Password must be at least 8 characters long and contain at least one number and one letter"; // Add an error message
         } else {
             try {
-                $pdo = new PDO("mysql:host=$host;dbname=$dbname", $db_username, $db_password); // Create a new PDO instance
+              $pdo = new PDO("mysql:host=$host;dbname=$dbname", $db_username, $db_password); // Create a new PDO instance // Create a new PDO instance
                 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set the error mode attribute to exception
 
                 $stmt = $pdo->prepare("INSERT INTO users (username, password) VALUES (?, ?)"); // Prepare an SQL statement

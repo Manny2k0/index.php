@@ -1,13 +1,13 @@
 <?php
 // global $pdo;
-session_start();
+session_start(); // Start the session
 
 // Define regex patterns
-$addressPattern = "/^[a-zA-Z0-9\s\.,\-]+$/";
+$addressPattern = "/^[a-zA-Z0-9\s\.,\-]+$/"; // Address pattern
 $zipCodePattern = "/^[A-Z]\d{2}\s[A-Z0-9]{4}$/"; // Ireland zip code format
 
 // Include config.php for database connection
-require_once 'config.php';
+require_once '../config/config.php';
 
 // Include database connection code here
 // Assuming you're using PDO for database connection
@@ -41,14 +41,14 @@ function insertTransaction($pdo, $userId, $transactionId, $amount, $type, $descr
 // Function to handle payment
 function handlePayment($pdo) {
     // Get payment details from the form
-    $address = isset($_POST["address"]) ? $_POST["address"] : '';
-    $zip_code = isset($_POST["zip_code"]) ? $_POST["zip_code"] : '';
-    $state = isset($_POST["state"]) ? $_POST["state"] : '';
-    $country = isset($_POST["country"]) ? $_POST["country"] : '';
-    $total = isset($_POST["total"]) ? $_POST["total"] : 0;
+    $address = isset($_POST["address"]) ? $_POST["address"] : ''; // Get address from form
+    $zip_code = isset($_POST["zip_code"]) ? $_POST["zip_code"] : ''; // Get zip code from form
+    $state = isset($_POST["state"]) ? $_POST["state"] : ''; // Get state from form
+    $country = isset($_POST["country"]) ? $_POST["country"] : ''; // Get country from form
+    $total = isset($_POST["total"]) ? $_POST["total"] : 0; // Get total amount from form
 
     // Define regex patterns
-    $addressPattern = "/^[a-zA-Z0-9\s\.,\-]+$/";
+    $addressPattern = "/^[a-zA-Z0-9\s\.,\-]+$/"; // Address pattern
     $zipCodePattern = "/^[A-Z]\d{2}\s[A-Z0-9]{4}$/"; // Ireland zip code format
 
     // Validate form data
@@ -58,9 +58,9 @@ function handlePayment($pdo) {
     }
 
     // Validate address
-    if (!preg_match($addressPattern, $address)) {
-        $_SESSION['error'] = "Invalid address. Please enter a valid address.";
-        return;
+    if (!preg_match($addressPattern, $address)) { // Check if address matches pattern
+        $_SESSION['error'] = "Invalid address. Please enter a valid address."; // Set error message
+        return;  // Exit function
     }
 
     // Validate zip code
@@ -70,75 +70,81 @@ function handlePayment($pdo) {
     }
 
     // Check if user has sufficient balance
-    $stmt = $pdo->prepare("SELECT balance FROM users WHERE username = :username");
-    $stmt->bindParam(':username', $_SESSION['Username']);
-    $stmt->execute();
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
-    $balance = $user['balance'];
+    $stmt = $pdo->prepare("SELECT balance FROM users WHERE username = :username"); // Prepare a select statement
+    $stmt->bindParam(':username', $_SESSION['Username']); // Bind username parameter
+    $stmt->execute(); // Execute the query
+    $user = $stmt->fetch(PDO::FETCH_ASSOC); // Fetch user details
+    $balance = $user['balance']; // Get user's balance
 
+    // Check if user has sufficient balance
     if ($balance < $total) {
-        $_SESSION['error'] = "Insufficient balance.";
+        $_SESSION['error'] = "Insufficient balance."; // Set error message
+        return; // Exit function
+    }
+
+    if($total > $balance) {
+        $_SESSION['error'] = "Insufficient balance.";     
         return;
     }
 
     // Convert total from Dollars to Cents
-    $total = $total * 100;
+    $total = $total * 100; // Convert total amount to cents
 
     // Deduct payment amount from user's balance
     $stmt = $pdo->prepare("UPDATE users SET balance = balance - :amount WHERE username = :username");
-    $stmt->bindParam(':amount', $total);
-    $stmt->bindParam(':username', $_SESSION['Username']);
-    $stmt->execute();
+    $stmt->bindParam(':amount', $total); // Bind amount parameter
+    $stmt->bindParam(':username', $_SESSION['Username']); // Bind username parameter
+    $stmt->execute(); // Execute the query
 
 // Update session balance
-    $_SESSION['balance'] -= $total;
+    $_SESSION['balance'] -= $total; // Update session balance
 
 
 // Define details of the transaction
-    $details = "Cards";
+    $details = "Cards"; // Set transaction details
 
     // Record transaction in transaction_history table
     $stmt = $pdo->prepare("INSERT INTO transaction_history (user_id, amount, transaction_type, description, transaction_date) VALUES (:user_id, :amount, 'payment', :description, NOW())");
-    $stmt->bindParam(':user_id', $_SESSION['user_id']);
-    $stmt->bindParam(':amount', $total);
-    $stmt->bindParam(':description', $details);
-    $stmt->execute();
+    $stmt->bindParam(':user_id', $_SESSION['user_id']); // Bind user_id parameter
+    $stmt->bindParam(':amount', $total); // Bind amount parameter
+    $stmt->bindParam(':description', $details); // Bind description parameter
+    $stmt->execute(); // Execute the query
 
 
     // Redirect to transaction.php
     header("Location: transaction.php");
-    exit();
+    exit(); // Exit script
 }
 
 // Check if form is submitted
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $address = $_POST["address"];
-    $zipCode = $_POST["zip_code"];
+if ($_SERVER["REQUEST_METHOD"] == "POST") { // Check if form is submitted
+    $address = $_POST["address"]; // Get address from form
+    $zipCode = $_POST["zip_code"]; // Get zip code from form
 
     // Validate address
-    if (!preg_match($addressPattern, $address)) {
-        $_SESSION['error'] = "Invalid address. Please enter a valid address.";
+    if (!preg_match($addressPattern, $address)) { // Check if address matches pattern
+        $_SESSION['error'] = "Invalid address. Please enter a valid address."; // Set error message
         header("Location: contact.php"); // Redirect back to contact.php with error message
-        exit();
+        exit(); // Exit script
     }
 
     // Validate zip code
-    if (!preg_match($zipCodePattern, $zipCode)) {
-        $_SESSION['error'] = "Invalid zip code. Please enter a valid zip code.";
+    if (!preg_match($zipCodePattern, $zipCode)) { // Check if zip code matches pattern
+        $_SESSION['error'] = "Invalid zip code. Please enter a valid zip code."; // Set error message
         header("Location: contact.php"); // Redirect back to contact.php with error message
         exit();
     }
 
     // Check if there are any errors
-    if (!isset($_SESSION['error'])) {
+    if (!isset($_SESSION['error'])) { // Check if error message is not set
         // Process payment and update balance
-        if (isset($_SESSION['balance']) && isset($_POST['total'])) {
-            handlePayment($pdo);
+        if (isset($_SESSION['balance']) && isset($_POST['total'])) { // Check if balance and total amount is set
+            handlePayment($pdo); // Call handlePayment function
         } else {
             // Redirect with error message if balance or total amount is not set
-            $_SESSION['error'] = "Error processing payment. Please try again later.";
-            header("Location: index.php");
-            exit();
+            $_SESSION['error'] = "Error processing payment. Please try again later."; // Set error message
+            header("Location: index.php"); // Redirect to index.php
+            exit(); // Exit script
         }
     }
 }
@@ -377,7 +383,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <li><a href="transfer.php">Transfer</a></li>
                 <li><a href="transaction.php">History</a></li>
                 <li><a href="index1.php">Card</a></li>
-                <li><a href="../template/cart.php">Cart</a></li>
+                <li><a href="cart.php">Cart</a></li>
             </ul>
         </nav>
     </div>

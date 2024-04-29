@@ -1,15 +1,15 @@
 <?php
 session_start();
-require_once 'config.php'; // Include the database connection
+require_once '../config/config.php'; // Include the database connection
 
 $errors = []; // Initialize error array
 
 try {
     // Establish database connection
     $pdo = new PDO('mysql:host=localhost;dbname=Register', 'root', 'Eo606752k18!');
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Database connection failed: " . $e->getMessage());
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set the error mode to exceptions
+} catch (PDOException $e) { // Catch any exceptions
+    die("Database connection failed: " . $e->getMessage()); // Display error message
 }
 
 // Check if the form is submitted
@@ -63,6 +63,7 @@ function handleTopUp($pdo, &$errors) {
 // Function to insert top-up transaction record into transaction_history table
 function insertTopUpTransaction($pdo, $user_id, $topup_amount) // Add $topup_amount parameter
 {
+    // Get the user's name from the session
     try {
         // Prepare and execute SQL query to fetch user's name based on session username
         $stmt_user = $pdo->prepare("SELECT username FROM users WHERE username = :username"); // Prepare SQL query
@@ -135,16 +136,16 @@ function handleTransfer($pdo, &$errors) {
 }
 
 
-function handlePayment($pdo, $amount, $user_id) {
+function handlePayment($pdo, $amount, $user_id) { // Add $amount and $user_id parameters
     try {
         // Start a transaction
-        $pdo->beginTransaction();
+        $pdo->beginTransaction(); // Start a transaction
 
         // Update user's balance
         $stmt = $pdo->prepare("UPDATE users SET balance = balance - :amount WHERE id = :user_id");
-        $stmt->bindParam(':amount', $amount);
-        $stmt->bindParam(':user_id', $user_id);
-        $stmt->execute();
+        $stmt->bindParam(':amount', $amount); // Bind the amount
+        $stmt->bindParam(':user_id', $user_id); // Bind the user ID
+        $stmt->execute(); // Execute the query
 
         // Insert payment transaction record into transaction_history table
         insertTransaction($pdo, $user_id, null, $amount, 'payment', 'Payment for goods/services');
@@ -375,8 +376,8 @@ function insertTransaction($pdo, $user_id, $recipient_username, $amount, $type, 
             <li><a href="topup.php">Top-up</a></li>
             <li><a href="index.php">Home</a></li>
             <li><a href="transfer.php">Transfer</a></li>
-            <li><a href="../src/functions.php">Card</a></li>
-            <li><a href="../template/cart.php">Cart</a></li>
+            <li><a href="functions.php">Card</a></li>
+            <li><a href="cart.php">Cart</a></li>
         </ul>
     </nav>
     <br>

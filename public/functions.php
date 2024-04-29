@@ -1,14 +1,14 @@
 <?php
 session_start();
 
-// require_once(__DIR__ . '/../template/list.php');
 
 // Define products array
+
 $products = [
-    '010' => ['name' => 'Plus', 'description' => 'Get benefits such as in-app help that is fast-tracked and protection for your everyday spending, all for a cost less than buying a coffee. You can have these things and more with Plus.', 'price' => 3.99, 'image' => '319efc11-6505-4d82-8834-cdbad89e7399.webp'],
-    '025' => ['name' => 'Premium', 'description' => 'Find flexible benefits that adapt to your life at home and travels around the world. Save, use, send or invest smarter with Premium', 'price' => 8.99, 'image' => '07a646eb-7aba-414d-8a0f-4e6c510f7eb8.webp'],
-    '005' => ['name' => 'Metal', 'description' => 'Discover a variety of benefits that enhance your lifestyle and take advantage of higher investment limits and more—all on Metal..', 'price' => 15.99, 'image' => 'ffe9c42b-183f-40f4-aca0-357c1afec049.webp'],
-    '021' => ['name' => 'Ultra', 'description' => 'Discover the extraordinary with premium travel, unique lifestyle benefits, and a platinum-plated, precisely designed card.', 'price' => 45.99, 'image' => '319efc11-6505-4d82-8834-cdbad89e7399.webp'],
+    '010' => ['name' => 'Plus', 'description' => 'Get benefits such as in-app help that is fast-tracked and protection for your everyday spending, all for a cost less than buying a coffee. You can have these things and more with Plus.', 'price' => 3.99, 'image' => '../img/319efc11-6505-4d82-8834-cdbad89e7399.webp'],
+    '025' => ['name' => 'Premium', 'description' => 'Find flexible benefits that adapt to your life at home and travels around the world. Save, use, send or invest smarter with Premium', 'price' => 8.99, 'image' => '../img/07a646eb-7aba-414d-8a0f-4e6c510f7eb8.webp'],
+    '005' => ['name' => 'Metal', 'description' => 'Discover a variety of benefits that enhance your lifestyle and take advantage of higher investment limits and more—all on Metal..', 'price' => 15.99, 'image' => '../img/ffe9c42b-183f-40f4-aca0-357c1afec049.webp'], // Add image key to each product
+    '021' => ['name' => 'Ultra', 'description' => 'Discover the extraordinary with premium travel, unique lifestyle benefits, and a platinum-plated, precisely designed card.', 'price' => 45.99, 'image' => '../img/319efc11-6505-4d82-8834-cdbad89e7399.webp'], // Add image key to each product
 ];
 
 // Initialize shopping cart
@@ -49,7 +49,9 @@ function displayCart() { // Function to display shopping cart
     require_once '../template/cart.php'; // Include template file for shopping cart display
 }
 
-// Action handling
+
+
+// Get action from query string when they click "add to cart"
 $action = isset($_GET['action']) ? $_GET['action'] : null; // Get action from query string
 switch ($action) { // Switch statement to handle actions
     case 'cart': // If action is cart

@@ -14,7 +14,7 @@
 <div class="container">
     <h1>Empty Shopping Cart</h1>
     <p>There are no items in your shopping cart.</p>
-    <a href="../src/functions.php" class="btn btn-primary">Back to Products</a>
+    <a href="functions.php" class="btn btn-primary">Back to Products</a>
 </div>
 </body>
 </html>

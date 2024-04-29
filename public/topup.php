@@ -8,11 +8,11 @@ session_start();
 if (!isset($_SESSION['Username'])) {
     // Redirect to login page if not logged in
     header("Location: login.php");
-    exit();
+    exit(); // Exit the script
 }
 
 // Include the session management file
-require_once 'session.php'; // Include the session management file
+require_once '../Session/session.php'; // Include the session management file
 
 // Include database connection code here
 // Assuming you're using PDO for database connection
@@ -21,7 +21,7 @@ try {
     $pdo = new PDO('mysql:host=localhost;dbname=Register', 'root', 'Eo606752k18!');
     // Set error mode to exception
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
+} catch (PDOException $e) { // Catch any exceptions
     // If connection fails, display error message and terminate script
     die("Error: " . $e->getMessage());
 }
@@ -159,24 +159,6 @@ function validateTopUpAmount($topUpAmount): bool
 {
     // Check if the top-up amount is numeric and greater than or equal to 500 (corresponds to $5.00 in cents)
     return is_numeric($topUpAmount) && $topUpAmount >= 500; // Return true if the top-up amount is numeric and greater than or equal to 500
-}
-
-// Function to fetch a specific top-up transaction by its ID
-function getTopUpById($pdo, $topUpId) {
-    // Prepare and execute SQL query to fetch top-up transaction by ID
-    $stmt = $pdo->prepare("SELECT * FROM transaction_history WHERE id = :id AND transaction_type = 'top_up'"); // Prepare SQL query
-    $stmt->bindParam(':id', $topUpId); // Bind the ID parameter
-    $stmt->execute(); // Execute the query
-    // Return the fetched transaction record
-    return $stmt->fetch(PDO::FETCH_ASSOC); // Return the fetched transaction record
-}
-
-// Function to delete a specific top-up transaction by its ID
-function deleteTopUpById($pdo, $topUpId) { // Function to delete top-up transaction by ID
-    // Prepare and execute SQL query to delete top-up transaction by ID
-    $stmt = $pdo->prepare("DELETE FROM transaction_history WHERE id = :id AND transaction_type = 'top_up'"); // Prepare SQL query
-    $stmt->bindParam(':id', $topUpId); // Bind the ID parameter
-    $stmt->execute(); // Execute the query
 }
 
 // Insert top-up transaction record into transaction_history table
@@ -671,8 +653,8 @@ $currentBalance = isset($_SESSION['balance']) ? $_SESSION['balance'] : 0.00; // 
                     <li><a href="index.php">Home</a></li>
                     <li><a href="transfer.php">Transfer</a></li>
                     <li><a href="transaction.php">History</a></li>
-                    <li><a href="../src/functions.php">Card</a></li>
-                    <li><a href="../template/cart.php">Cart</a></li>
+                    <li><a href="functions.php">Card</a></li>
+                    <li><a href="cart.php">Cart</a></li>
                 </ul>
             </nav>
         </div>

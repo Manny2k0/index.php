@@ -6,7 +6,7 @@ use src\Login;
 
 
 
-// rest of your code
+
 
 
 require_once __DIR__ . '/../vendor/autoload.php';
@@ -14,8 +14,8 @@ require_once __DIR__ . '/../vendor/autoload.php';
 // Include configuration and session management files
 
 
-require_once('config.php'); // Load configuration settings
-require_once('session.php'); // Include session management functionality
+require_once('../config/config.php'); // Load configuration settings
+require_once('../Session/session.php'); // Include session management functionality
 // Start the session
 
 
@@ -40,6 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") { // If login form is submitted
 
     // Your login authentication code here
     // For example, you can query the database to check if the username and password match
+    // If the user is valid, set session variables and redirect to the index page
     try {
         $pdo = new PDO('mysql:host=localhost;dbname=Register', 'root', 'Eo606752k18!'); // Establish connection to the database
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set error mode to exception handling
@@ -50,6 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") { // If login form is submitted
         $stmt->execute(); // Execute the prepared statement
 
         $user = $stmt->fetch(PDO::FETCH_ASSOC); // Fetch user data from the result set
+
 
         if ($user) { // If user data is retrieved
             // Login successful, set session variables

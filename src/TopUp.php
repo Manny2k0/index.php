@@ -1,22 +1,36 @@
 <?php
-// namespace src;
 
 namespace src;
-
 
 use AllowDynamicProperties;
 use PDO;
 use PDOException;
-#[AllowDynamicProperties] class TopUp
-{
 
+/**
+ * Class TopUp
+ *
+ * This class is responsible for handling top-up operations.
+ */
+#[AllowDynamicProperties]
+class TopUp
+{
+    /**
+     * TopUp constructor.
+     *
+     * @param $pdo - The PDO instance for database operations
+     */
     public function __construct($pdo)
     {
+        // Establish a database connection
         $this->pdo = new \PDO('mysql:host=localhost;dbname=Register', 'root', 'Eo606752k18!');
     }
 
-
-    // Function to validate credit card number
+    /**
+     * Validate the credit card number.
+     *
+     * @param $creditCardNumber - The credit card number to validate
+     * @return bool - Returns true if the credit card number is valid, false otherwise
+     */
     public function validateCreditCardNumber($creditCardNumber)
     {
         // Check if the credit card number matches the pattern of four groups of four digits separated by hyphens
@@ -31,7 +45,13 @@ use PDOException;
         return is_numeric($creditCardNumber) && strlen($creditCardNumber) === 16;
     }
 
-    // Function to validate expiration date
+    /**
+     * Validate the expiration date of the credit card.
+     *
+     * @param $expirationMonth - The expiration month to validate
+     * @param $expirationYear - The expiration year to validate
+     * @return bool - Returns true if the expiration date is valid, false otherwise
+     */
     public function validateExpirationDate($expirationMonth, $expirationYear)
     {
         // Check if both month and year are numeric and have the correct length
@@ -63,21 +83,40 @@ use PDOException;
         return true;
     }
 
-    // Function to validate CVV
+    /**
+     * Validate the CVV of the credit card.
+     *
+     * @param $cvv - The CVV to validate
+     * @return bool - Returns true if the CVV is valid, false otherwise
+     */
     public function validateCVV($cvv)
     {
         // Check if CVV is numeric and has a length of 3 digits
         return is_numeric($cvv) && strlen($cvv) === 3 && ctype_digit($cvv);
     }
 
-    // Function to validate top-up amount
+    /**
+     * Validate the top-up amount.
+     *
+     * @param $topUpAmount - The top-up amount to validate
+     * @return bool - Returns true if the top-up amount is valid, false otherwise
+     */
     public function validateTopUpAmount($topUpAmount)
     {
         // Check if the top-up amount is numeric and greater than or equal to 500 (corresponds to $5.00 in cents)
         return is_numeric($topUpAmount) && $topUpAmount >= 500;
     }
 
-    // Function to perform top-up
+    /**
+     * Perform a top-up operation.
+     *
+     * @param $creditCardNumber - The credit card number to use for the top-up
+     * @param $expirationMonth - The expiration month of the credit card
+     * @param $expirationYear - The expiration year of the credit card
+     * @param $cvv - The CVV of the credit card
+     * @param $topUpAmount - The amount to top-up
+     * @return bool - Returns true if the top-up is successful, false otherwise
+     */
     public function topUp($creditCardNumber, $expirationMonth, $expirationYear, $cvv, $topUpAmount)
     {
         // Validate the credit card number
