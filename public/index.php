@@ -9,7 +9,7 @@ session_start(); // Start the session
 
     // Redirect to login page if not logged in
     header("Location: login.php"); // Redirect to login page
-    exit();
+    exit(); // Exit the script
 }
 
 // Display current balance

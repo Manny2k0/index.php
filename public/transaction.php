@@ -6,7 +6,7 @@ $errors = []; // Initialize error array
 
 try {
     // Establish database connection
-    $pdo = new PDO('mysql:host=localhost;dbname=Register', 'root', 'Eo606752k18!');
+    $pdo = new PDO('mysql:host=localhost;dbname=Register', 'root', 'Eo606752k18!'); // Create a new PDO instance
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set the error mode to exceptions
 } catch (PDOException $e) { // Catch any exceptions
     die("Database connection failed: " . $e->getMessage()); // Display error message
@@ -56,7 +56,7 @@ function handleTopUp($pdo, &$errors) {
         header("Location: index.php");
         exit(); // Exit the script
     } catch (PDOException $e) { // Catch any exceptions
-        die("Error: " . $e->getMessage());
+        die("Error: " . $e->getMessage()); // Display error message
     }
 }
 
@@ -74,18 +74,18 @@ function insertTopUpTransaction($pdo, $user_id, $topup_amount) // Add $topup_amo
 
         // Prepare and execute SQL query to insert top-up transaction record
         $stmt = $pdo->prepare("INSERT INTO transaction_history (user_id, transaction_date, transaction_type, amount, username) VALUES (:user_id, CURRENT_TIMESTAMP, 'top_up', :topup_amount, :username)");
-        $stmt->bindParam(':user_id', $user_id);
-        $stmt->bindParam(':topup_amount', $topup_amount);
+        $stmt->bindParam(':user_id', $user_id); // Bind the user ID
+        $stmt->bindParam(':topup_amount', $topup_amount); // Bind the top-up amount
         $stmt->bindParam(':username', $username); // Bind the user's name
-        $stmt->execute();
-    } catch (PDOException $e) {
+        $stmt->execute(); // Execute the query
+    } catch (PDOException $e) { // Catch any exceptions
         // If an error occurs during insertion, display error message
         echo "Error inserting top-up transaction: " . $e->getMessage();
     }
 }
 
 // Function to handle transfer
-function handleTransfer($pdo, &$errors) {
+function handleTransfer($pdo, &$errors) { // Add $errors parameter
     // Get transfer details from the form
     $recipientUsername = isset($_POST["Recipient"]) ? $_POST["Recipient"] : ''; // Get the recipient username
     $transferAmount = isset($_POST["Amount"]) ? $_POST["Amount"] : ''; // Get the transfer amount
@@ -135,14 +135,14 @@ function handleTransfer($pdo, &$errors) {
     }
 }
 
-
+// Function to validate top-up amount
 function handlePayment($pdo, $amount, $user_id) { // Add $amount and $user_id parameters
     try {
         // Start a transaction
         $pdo->beginTransaction(); // Start a transaction
 
         // Update user's balance
-        $stmt = $pdo->prepare("UPDATE users SET balance = balance - :amount WHERE id = :user_id");
+        $stmt = $pdo->prepare("UPDATE users SET balance = balance - :amount WHERE id = :user_id"); // Prepare SQL query
         $stmt->bindParam(':amount', $amount); // Bind the amount
         $stmt->bindParam(':user_id', $user_id); // Bind the user ID
         $stmt->execute(); // Execute the query
@@ -155,7 +155,7 @@ function handlePayment($pdo, $amount, $user_id) { // Add $amount and $user_id pa
 
         // Redirect to the index page
         header("Location: index.php");
-        exit();
+        exit(); // Exit the script
     } catch (PDOException $e) {
         // Rollback the transaction if an error occurs
         $pdo->rollBack(); // Rollback the transaction
@@ -165,7 +165,7 @@ function handlePayment($pdo, $amount, $user_id) { // Add $amount and $user_id pa
 
 
 // Function to validate top-up amount
-function validateTopUpAmount($topUpAmount) {
+function validateTopUpAmount($topUpAmount) { // Add $topUpAmount parameter
     return is_numeric($topUpAmount) && $topUpAmount >= 500; // 500 corresponds to $5.00 in cents
 }
 
@@ -182,7 +182,7 @@ function insertTransaction($pdo, $user_id, $recipient_username, $amount, $type, 
         $stmt->bindParam(':purpose_of_transfer', $purpose_of_transfer); // Include purpose of transfer
         $stmt->execute(); // Execute the query
     } catch (PDOException $e) {
-        echo "Error inserting transaction: " . $e->getMessage();
+        echo "Error inserting transaction: " . $e->getMessage(); // Display error message
     }
 }
 

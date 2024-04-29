@@ -13,6 +13,8 @@ try {
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set the error mode attribute to exception
 
     $username = $_SESSION['Username']; // Get the username from the session
+
+    // Get the user ID and balance
     $stmt = $pdo->prepare("SELECT id, balance FROM users WHERE username = :username"); // Prepare an SQL statement
     $stmt->bindParam(':username', $username); // Bind the parameter
     $stmt->execute(); // Execute the SQL statement

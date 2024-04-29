@@ -73,10 +73,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (empty($errors)) {
         try {
             // Update balance in the database
-            $stmt = $pdo->prepare("UPDATE users SET balance = balance + :amount WHERE username = :username");
-            $stmt->bindParam(':amount', $topUpAmountCents);
-            $stmt->bindParam(':username', $_SESSION['Username']);
-            $stmt->execute();
+            $stmt = $pdo->prepare("UPDATE users SET balance = balance + :amount WHERE username = :username"); //
+            $stmt->bindParam(':amount', $topUpAmountCents); // Bind the amount parameter
+            $stmt->bindParam(':username', $_SESSION['Username']); // Bind the username parameter
+            $stmt->execute(); // Execute the query
 
             // Insert top-up transaction record into transaction_history table
             insertTopUpTransaction($pdo, $_SESSION['user_id'], $topUpAmountCents); // Insert top-up transaction record

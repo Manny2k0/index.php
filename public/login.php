@@ -41,6 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") { // If login form is submitted
     // Your login authentication code here
     // For example, you can query the database to check if the username and password match
     // If the user is valid, set session variables and redirect to the index page
+
     try {
         $pdo = new PDO('mysql:host=localhost;dbname=Register', 'root', 'Eo606752k18!'); // Establish connection to the database
         $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION); // Set error mode to exception handling
@@ -110,11 +111,6 @@ session_destroy(); // Destroy the session
 ?>
 
 
-<?php
-
-// include __DIR__ . '/../template/header.php';
-
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
